@@ -148,3 +148,81 @@ const fibsRec = (n) => {
   }
 }
 
+const splitArray = (array) => {
+  const halfLength = array.length / 2
+  const firstArray = array.slice(0, halfLength)
+  const secondArray = array.slice(halfLength)
+
+  return [firstArray, secondArray]
+}
+
+const sort = (a, b) => {
+  if (a >= b) {
+    return [b, a]
+  } else {
+    return [a, b]
+  }
+}
+
+const min = (a, b) => {
+  if (a >= b) {
+    return b
+  } else {
+    return a
+  }
+}
+
+const sortArrays = (array1, array2) => {
+  totalLength = array1.length + array2.length
+  returnThisArray = []
+  //[][][] [][]
+
+  //compare first items then push it on returnThisArray
+  //the bigger item gets compared to the next number in the other array
+  for (let i = 0; i < totalLength; i++) {
+    const minNum = min(array1[0], array2[0])
+    if (array1.length == 0) {
+      console.log("array1 empty")
+      for (x of array2) {
+        returnThisArray.push(x)
+        array2.shift()
+      }
+    } else if (array2.length == 0) {
+      console.log("array2 empty")
+      for (x of array1) {
+        returnThisArray.push(x)
+        array1.shift()
+      }
+    } else if (array1[0] != undefined && array1[0] == minNum) {
+      returnThisArray.push(minNum)
+      array1.shift()
+    } else if (array2[0] != undefined && array2[0] == minNum) {
+      returnThisArray.push(minNum)
+      array2.shift()
+    }
+  }
+
+  return returnThisArray
+}
+
+const mergeSort = (array) => {
+  // base case
+  // when you split them, check if it's a number (not an array), sort them and merge
+
+  // if it's an array when you split, split into two
+  let returnThisArray = []
+
+  splitArray(array)
+  for (x of array) {
+    if (Array.isArray(x) == false) {
+      // sort and merge
+      if (array.length == 2) {
+        return sort(array[0], array[1])
+      }
+    } else {
+      // mergeSort(x)
+    }
+  }
+}
+
+console.log(sortArrays([5, 6], [3, 4]))
