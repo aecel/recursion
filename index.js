@@ -148,20 +148,25 @@ const fibsRec = (n) => {
   }
 }
 
+// Algorithm for Merge Sort
+// Step 1: Find the middle index of the array.
+// Middle = 1 + (last – first)/2
+// Step 2: Divide the array from the middle.
+// Step 3: Call merge sort for the first half of the array
+// MergeSort(array, first, middle)
+// Step 4: Call merge sort for the second half of the array.
+// MergeSort(array, middle+1, last)
+// Step 5: Merge the two sorted halves into a single sorted array.
+
 const splitArray = (array) => {
+  if (array.length == 1) {
+    return array
+  }
   const halfLength = array.length / 2
   const firstArray = array.slice(0, halfLength)
   const secondArray = array.slice(halfLength)
 
   return [firstArray, secondArray]
-}
-
-const sort = (a, b) => {
-  if (a >= b) {
-    return [b, a]
-  } else {
-    return [a, b]
-  }
 }
 
 const min = (a, b) => {
@@ -172,31 +177,32 @@ const min = (a, b) => {
   }
 }
 
-const sortArrays = (array1, array2) => {
-  totalLength = array1.length + array2.length
-  returnThisArray = []
+const mergeArrays = (array1, array2) => {
+  // assuming that the arrays are already sorted low to high
+  const totalLength = array1.length + array2.length
+  
+  let returnThisArray = []
   //[][][] [][]
 
   //compare first items then push it on returnThisArray
   //the bigger item gets compared to the next number in the other array
   for (let i = 0; i < totalLength; i++) {
     const minNum = min(array1[0], array2[0])
+
     if (array1.length == 0) {
-      console.log("array1 empty")
-      for (x of array2) {
+      for (const x of array2) {
         returnThisArray.push(x)
-        array2.shift()
       }
+      return returnThisArray
     } else if (array2.length == 0) {
-      console.log("array2 empty")
-      for (x of array1) {
+      for (const x of array1) {
         returnThisArray.push(x)
-        array1.shift()
       }
-    } else if (array1[0] != undefined && array1[0] == minNum) {
+      return returnThisArray
+    } else if (array1[0] == minNum) {
       returnThisArray.push(minNum)
       array1.shift()
-    } else if (array2[0] != undefined && array2[0] == minNum) {
+    } else if (array2[0] == minNum) {
       returnThisArray.push(minNum)
       array2.shift()
     }
@@ -205,24 +211,48 @@ const sortArrays = (array1, array2) => {
   return returnThisArray
 }
 
+let indent = 0
+const logIndent = (...args) => {
+  let res = ""
+  for (let i = 0; i < indent; i++) res += "\t"
+  console.log(res, ...args)
+}
+
 const mergeSort = (array) => {
   // base case
   // when you split them, check if it's a number (not an array), sort them and merge
 
-  // if it's an array when you split, split into two
-  let returnThisArray = []
+  let [left, right] = splitArray(array)
+  logIndent("called merge sort with ", array)
+  logIndent("left", left, "right", right)
 
-  splitArray(array)
-  for (x of array) {
-    if (Array.isArray(x) == false) {
-      // sort and merge
-      if (array.length == 2) {
-        return sort(array[0], array[1])
-      }
-    } else {
-      // mergeSort(x)
-    }
+  indent++
+
+  if (left.length > 1) {
+    left = mergeSort(left)
   }
+
+  if (right.length > 1) {
+    right = mergeSort(right)
+  }
+
+  indent--
+
+  logIndent("merging", left, right)
+
+  const result = mergeArrays(left, right)
+
+  logIndent("merged", result)
+
+  return result
 }
 
-console.log(sortArrays([5, 6], [3, 4]))
+const testArray = [8, 6, 1, 7, 2, 9, 1]
+// const splitTest = splitArray(testArray)
+
+// for(x of splitTest) {
+//   console.log(x)
+// }
+
+console.log("FINAL", mergeSort(testArray))
+// console.log(mergeArrays([1, 3, 5, 7], [2, 4, 6, 7, 8, 9, 10]))
